@@ -15,17 +15,17 @@ extern "C" {
 
 uint32_t prng32_xrp64(void);
 void seed_xrp64(uint32_t seed);
-#define XRP64_TABLE_ID xrp64t
+#define XRP64_TABLE_ID xrp->table
 
 #define TABLE_SIZE_BYTES 256
 /* The table must be seeded with DISTINCT 0-255 chars in random order. */
-extern unsigned char XRP64_TABLE_ID[TABLE_SIZE_BYTES];
 #define SHIFTED_WORD_WIDTH 32
 #define XRP_MAX UINT_MAX
 #define BYTES_IN_WORD 4
 #define WORDS_IN_TABLE 64
 typedef struct 
 {
+	unsigned char table[TABLE_SIZE_BYTES];
 	uint32_t w;
 	uint32_t x;	
 	uint32_t y;

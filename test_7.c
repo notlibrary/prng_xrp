@@ -36,7 +36,7 @@ main()
 	seed_xrp64(65000);
 	for (i=0;i<50;i++) 
 	{
-		rng32_xrp64();
+		prng32_xrp64();
 	}
 	
 	seed_xrp64(65535);		
