@@ -19,7 +19,7 @@ seed_xrp32(0x0A0B0C0D0A0B0C0D);
 printf("%s \n","prng64_xrp32() test sample");
 for (i=0;i<100;i++) 
 	{
-		printf("%llu \n",prng64_xrp32());
+		printf("%I64u \n",prng64_xrp32());
 		
 		
 	}

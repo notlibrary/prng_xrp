@@ -46,7 +46,7 @@ main()
 	}	
 	for (i=0;i<100;i++) 
 	{
-		printf("%lu %lu \n", seeda[i],seedb[i]);
+		printf("%u %u \n", seeda[i],seedb[i]);
 	}
 	system("pause");
 	return 0;
