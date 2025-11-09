@@ -53,15 +53,14 @@ pearson32(uint64_t in[TOTAL_PARAMS],xrp_state_t* xrp)
 {
 	size_t i;  
 	uint64_t h=0;
-	uint64_t out=0;
 	
     for (i = 0; i < TOTAL_PARAMS; ++i) 
 	{         
 			h^=in[i];
-			out=get_word(h,xrp);			
+			h=get_word(h,xrp);			
     }
     
-	return out;
+	return h;
 
 }
 

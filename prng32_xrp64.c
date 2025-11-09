@@ -49,15 +49,14 @@ static uint32_t
 pearson64(uint32_t in[4],xrp_state_t* xrp)
 {
 	size_t i;  
-	uint32_t h=0;;
-	uint32_t out=0;;	
+	uint32_t h=0;;	
 	
     for (i = 0; i < TOTAL_PARAMS; ++i) 
 	{       h^=in[i];
-			out=get_word(h,xrp);			
+			h=get_word(h,xrp);			
     }
     
-	return out;
+	return h;
 
 }
 
