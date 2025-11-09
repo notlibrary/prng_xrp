@@ -64,13 +64,11 @@ static void
 shuffle4bytes(uint32_t a, uint32_t b, xrp_state_t* xrp)
 {
     unsigned char swap_buffer = 0;
-    unsigned char bytesa[BYTES_IN_WORD];
-	unsigned char bytesb [BYTES_IN_WORD];
+    unsigned char* bytesa = (unsigned char*)(&a);
+    unsigned char* bytesb = (unsigned char*)(&b);
 	size_t i = 0;
 		
-for (i = 0; i < sizeof(uint32_t); i++) {
-        bytesa[i] = (a >> (i * 8)) & 0xFF;
-        bytesb[i] = (b >> (i * 8)) & 0xFF;
+for (i = 0; i < BYTES_IN_WORD; i++) {
     
 		swap_buffer = XRP64_TABLE_ID[bytesa[i]];
         XRP64_TABLE_ID[bytesa[i]]=XRP64_TABLE_ID[bytesb[i]];

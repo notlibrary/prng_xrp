@@ -69,14 +69,12 @@ shuffle8bytes(uint64_t a, uint64_t b, xrp_state_t* xrp)
 {
     unsigned char swap_buffer = 0;
     size_t i = 0;
-    unsigned char bytesa[BYTES_IN_WORD];
-	unsigned char bytesb [BYTES_IN_WORD];
+    unsigned char* bytesa = (unsigned char*)(&a);
+    unsigned char* bytesb = (unsigned char*)(&b);
 	
 		
-for ( i = 0; i < sizeof(uint64_t); i++) {
-        bytesa[i] = (a >> (i * 8)) & 0xFF;
-        bytesb[i] = (b >> (i * 8)) & 0xFF;
-    
+for ( i = 0; i < BYTES_IN_WORD; i++) {
+      
 		swap_buffer = XRP32_TABLE_ID[bytesa[i]];
         XRP32_TABLE_ID[bytesa[i]]=XRP32_TABLE_ID[bytesb[i]];
 		XRP32_TABLE_ID[bytesb[i]]=swap_buffer;
