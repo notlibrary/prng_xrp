@@ -34,11 +34,13 @@ get_word(uint64_t in, xrp_state_t* xrp)
 	uint32_t  out =0;	
 	size_t i=0;  
 	unsigned char n =0;
+	unsigned char* inb = (unsigned char*)(&in);
+	unsigned char* outb = (unsigned char*)(&out);
 	for (i=0;i<BYTES_IN_WORD;i++)
 	{
-		n = (in >> (i * 8)) & 0xFF;
-		n=XRP64_TABLE_ID[n];
-		out |= (n << (i * 8));
+		n = inb[i];
+		n = XRP64_TABLE_ID[n];
+		outb[i]=n;
 	}
 return out;
 }
@@ -48,13 +50,14 @@ pearson64(uint32_t in[4],xrp_state_t* xrp)
 {
 	size_t i;  
 	uint32_t h=0;;
+	uint32_t out=0;;	
 	
     for (i = 0; i < TOTAL_PARAMS; ++i) 
 	{       h^=in[i];
-			get_word(h,xrp);			
+			out=get_word(h,xrp);			
     }
     
-	return h;
+	return out;
 
 }
 
