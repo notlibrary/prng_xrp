@@ -34,4 +34,4 @@ and it's randomness passes diehard because of additional hash table reshuffle ba
 It's totally free 0-BSD code. You can include it in your app or library
 
 Do not underestimate it with best possible test circumstances `clang -O2` it outputs ~240 MB/sec
-of random numbers from stock desktop computer device
+of pseudo random numbers from stock desktop computer device
