@@ -35,3 +35,9 @@ It's totally free 0-BSD code. You can include it in your app or library
 
 Do not underestimate it with best possible test circumstances `clang -O2` it outputs ~240 MB/sec
 of pseudo random numbers from stock desktop computer device
+
+Sure I'm aware about MT and WELL tech and math superiority. The point is not to maintain it but
+explain to 5yo what it does and how it works. From this POV generators like `return 4;` or `date | md5`
+are actually good one and "shifters" are far ahead than "twisters".
+A broken clock is right twice a day.
+Also deprecating an old generator in favor of new yields nothing.
