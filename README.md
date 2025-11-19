@@ -28,7 +28,7 @@ I wrote it long ago as STEM student now I publish whole algorithm
 (because I think it can interest you) and quit. Not going to maintain it anymore. 
 However you are welcome to test this perfectly fine number crusher at anytime. 
 
-It comes with 8 or more "toy pulse" simple tests allowing user to ensure base generator functionality("vital signs")
+It comes with 8 or more "toy pulse" simple tests allowing user to quickly ensure base generator functionality("vital signs")
 
 It's based on pairing non-crypto xorshift128(or xoshiro256ss) with non-crypto Pearson hashing
 
