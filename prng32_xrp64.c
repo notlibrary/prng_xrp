@@ -19,12 +19,6 @@ rotl32(uint32_t n, size_t shift)
     return (n << shift) | (n >> (SHIFTED_WORD_WIDTH - shift));
 }
 
-static uint32_t
-rotr32(uint32_t n, size_t shift)
-{
-    return (n >> shift) | (n << (SHIFTED_WORD_WIDTH - shift));
-}
-
 #define BYTES_IN_WORD 4
 #define TOTAL_PARAMS 4
 
@@ -107,9 +101,18 @@ prng32_xrp64(void)
 	return pearson64(out,xrp);	
 }
 
+struct splitmix64_state {
+	uint64_t s;
+};
 
+uint64_t splitmix64(struct splitmix64_state *state) {
+	uint64_t result = (state->s += 0x9E3779B97F4A7C15);
+	result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
+	result = (result ^ (result >> 27)) * 0x94D049BB133111EB;
+	return result ^ (result >> 31);
+}
 void
-seed_xrp64(uint32_t seed)
+seed_xrp64(uint64_t seed)
 {
 const unsigned char xrp64_canonical_table[TABLE_SIZE_BYTES] = {
        92,  6, 85,150, 36, 23,112,164,135,207,169,  5, 26, 64,165,219, //  1
@@ -149,11 +152,16 @@ const unsigned char xrp64_canonical_table[TABLE_SIZE_BYTES] = {
    xrp_state_t* xrp = get_xrp_state();
    xrp->counter=0;
    
+	struct splitmix64_state smstate = {seed};
+
+	uint64_t tmp = splitmix64(&smstate);
+	xrp->w = (uint32_t)tmp;
+	xrp->x= (uint32_t)(tmp >> 32);
+
+	tmp = splitmix64(&smstate);
+	xrp->y = (uint32_t)tmp;
+	xrp->z= (uint32_t)(tmp >> 32);
    
-   xrp->w=seed;
-   xrp->x=rotl32(seed,8);
-   xrp->y=rotl32(seed,16);
-   xrp->z=rotr32(seed,8); 
    for (i= 0;i<TABLE_SIZE_BYTES;++i) { XRP64_TABLE_ID[i]=xrp64_canonical_table[i];}
    shuffle4bytes(seed,(rotl32(seed,16)) ,xrp);
    for(i = 0; i < (WORDS_IN_TABLE + seed % WORDS_IN_TABLE); ++i) {

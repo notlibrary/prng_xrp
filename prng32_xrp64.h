@@ -14,7 +14,7 @@ extern "C" {
 #include <limits.h>
 
 uint32_t prng32_xrp64(void);
-void seed_xrp64(uint32_t seed);
+void seed_xrp64(uint64_t seed);
 #define XRP64_TABLE_ID xrp->table
 
 #define TABLE_SIZE_BYTES 256

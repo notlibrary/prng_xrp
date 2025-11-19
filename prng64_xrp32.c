@@ -114,6 +114,17 @@ prng64_xrp32(void)
 
 }
 
+struct splitmix64_state {
+	uint64_t s;
+};
+
+uint64_t splitmix64(struct splitmix64_state *state) {
+	uint64_t result = (state->s += 0x9E3779B97F4A7C15);
+	result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
+	result = (result ^ (result >> 27)) * 0x94D049BB133111EB;
+	return result ^ (result >> 31);
+}
+
 void
 seed_xrp32(uint64_t seed)
 {
@@ -156,11 +167,14 @@ seed_xrp32(uint64_t seed)
 	
 	xrp->counter=0;
 	
-   xrp->w=seed;
-   xrp->x=rotl64(seed,8);
-   xrp->y=rotl64(seed,16);
-   xrp->z=rotl64(seed,24);
- 
+	struct splitmix64_state smstate = {seed};
+
+	xrp->w = splitmix64(&smstate);
+	xrp->x= splitmix64(&smstate);
+	xrp->y=splitmix64(&smstate); 
+	xrp->z= splitmix64(&smstate); 
+
+	
    
    for (i= 0;i<TABLE_SIZE_BYTES;++i) { XRP32_TABLE_ID[i]=xrp32_canonical_table[i];}
    shuffle8bytes(seed,rotl64(seed,32),xrp);
