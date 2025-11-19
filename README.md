@@ -31,6 +31,7 @@ However you are welcome to test this perfectly fine number crusher at anytime.
 It comes with 8 or more "toy pulse" simple tests allowing user to ensure base generator functionality("vital signs")
 
 It's based on pairing non-crypto xorshift128(or xoshiro256ss) with non-crypto Pearson hashing
+
 Anyway it demonstrates pairiq with cryptohash or symmetric stream cipher opportunity
 in order to slowly obtain slightly more high quality random numbers
 
