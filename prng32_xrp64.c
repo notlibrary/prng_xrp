@@ -18,6 +18,11 @@ rotl32(uint32_t n, size_t shift)
 {
     return (n << shift) | (n >> (SHIFTED_WORD_WIDTH - shift));
 }
+static uint32_t
+rotr32(uint32_t n, size_t shift)
+{
+    return (n >> shift) | (n << (SHIFTED_WORD_WIDTH - shift));
+}
 
 #define BYTES_IN_WORD 4
 #define TOTAL_PARAMS 4
@@ -163,7 +168,9 @@ const unsigned char xrp64_canonical_table[TABLE_SIZE_BYTES] = {
 	xrp->z= (uint32_t)(tmp >> 32);
    
    for (i= 0;i<TABLE_SIZE_BYTES;++i) { XRP64_TABLE_ID[i]=xrp64_canonical_table[i];}
+   
    shuffle4bytes(seed,(rotl32(seed,16)) ,xrp);
+   shuffle4bytes(seed,(rotr32(seed,16)) ,xrp);
    for(i = 0; i < (WORDS_IN_TABLE + seed % WORDS_IN_TABLE); ++i) {
        shuffle4bytes(prng32_xrp64(), prng32_xrp64(),xrp);
    }

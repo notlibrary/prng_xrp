@@ -177,6 +177,7 @@ seed_xrp32(uint64_t seed)
 	
    
    for (i= 0;i<TABLE_SIZE_BYTES;++i) { XRP32_TABLE_ID[i]=xrp32_canonical_table[i];}
+   shuffle8bytes(seed,rotr64(seed,32),xrp);
    shuffle8bytes(seed,rotl64(seed,32),xrp);
    for(i = 0; i < (WORDS_IN_TABLE + seed % WORDS_IN_TABLE); ++i) {
 		shuffle8bytes(prng64_xrp32(), prng64_xrp32(),xrp);
