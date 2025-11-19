@@ -169,8 +169,8 @@ const unsigned char xrp64_canonical_table[TABLE_SIZE_BYTES] = {
    
    for (i= 0;i<TABLE_SIZE_BYTES;++i) { XRP64_TABLE_ID[i]=xrp64_canonical_table[i];}
    
-   shuffle4bytes(seed,(rotl32(seed,16)) ,xrp);
-   shuffle4bytes(seed,(rotr32(seed,16)) ,xrp);
+   shuffle4bytes(seed,(rotl32(prng32_xrp64(),16)) ,xrp);
+   shuffle4bytes(seed,(rotr32(prng32_xrp64(),16)) ,xrp);
    for(i = 0; i < (WORDS_IN_TABLE + seed % WORDS_IN_TABLE); ++i) {
        shuffle4bytes(prng32_xrp64(), prng32_xrp64(),xrp);
    }
