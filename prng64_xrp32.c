@@ -118,7 +118,9 @@ struct splitmix64_state {
 	uint64_t s;
 };
 
-uint64_t splitmix64(struct splitmix64_state *state) {
+static uint64_t
+splitmix64(struct splitmix64_state *state) 
+{
 	uint64_t result = (state->s += 0x9E3779B97F4A7C15);
 	result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
 	result = (result ^ (result >> 27)) * 0x94D049BB133111EB;
@@ -173,7 +175,6 @@ seed_xrp32(uint64_t seed)
 	xrp->x= splitmix64(&smstate);
 	xrp->y=splitmix64(&smstate); 
 	xrp->z= splitmix64(&smstate); 
-
 	
    
    for (i= 0;i<TABLE_SIZE_BYTES;++i) { XRP32_TABLE_ID[i]=xrp32_canonical_table[i];}
