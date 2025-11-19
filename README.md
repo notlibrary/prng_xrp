@@ -32,7 +32,7 @@ It comes with 8 or more "toy pulse" simple tests allowing user to ensure base ge
 
 It's based on pairing non-crypto xorshift128(or xoshiro256ss) with non-crypto Pearson hashing
 
-Anyway it demonstrates pairiq with cryptohash or symmetric stream cipher opportunity
+Anyway it demonstrates pairing PRNG with cryptohash or symmetric stream cipher opportunity
 in order to slowly obtain slightly more high quality random numbers
 
 It's totally free 0-BSD code. You can include it in your app or library
