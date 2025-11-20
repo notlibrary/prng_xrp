@@ -6,13 +6,13 @@ Select operation mode(32 or 64 bit):
 #include "prng32_xrp64.h" 
 #include "prng32_xrp64.c"
 ```
-for 32 bit output numbers; 64 words per table; 256 bytes per table
+for 32 bit output numbers; xorshift128 algo; 64 words per table; 256 bytes per table
 
 ```C
 #include "prng64_xrp32.h" 
 #include "prng64_xrp32.c"
 ``` 
-for 64 bit output numbers; 32 words per table; 256 bytes per table
+for 64 bit output numbers; xoshiro256ss algo; 32 words per table; 256 bytes per table
 
 To seed use: `seed_xrp64(seed)` or `seed_xrp32(seed)` call
 
