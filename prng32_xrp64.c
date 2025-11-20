@@ -106,12 +106,9 @@ prng32_xrp64(void)
 	return pearson64(out,xrp);	
 }
 
-struct splitmix64_state {
-	uint64_t s;
-};
 
 static uint64_t 
-splitmix64(struct splitmix64_state *state)
+splitmix64(splitmix64_state_t *state)
  {
 	uint64_t result = (state->s += 0x9E3779B97F4A7C15);
 	result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
@@ -158,17 +155,17 @@ const unsigned char xrp64_canonical_table[TABLE_SIZE_BYTES] = {
          };	
    size_t i = 0;
    xrp_state_t* xrp = get_xrp_state();
-   xrp->counter=0;
+   xrp->counter = 0;
    
-	struct splitmix64_state smstate = {seed};
+	splitmix64_state_t smstate = {seed};
 
 	uint64_t tmp = splitmix64(&smstate);
 	xrp->w = (uint32_t)tmp;
-	xrp->x= (uint32_t)(tmp >> 32);
+	xrp->x = (uint32_t)(tmp >> 32);
 
 	tmp = splitmix64(&smstate);
 	xrp->y = (uint32_t)tmp;
-	xrp->z= (uint32_t)(tmp >> 32);
+	xrp->z = (uint32_t)(tmp >> 32);
    
    for (i= 0;i<TABLE_SIZE_BYTES;++i) { XRP64_TABLE_ID[i]=xrp64_canonical_table[i];}
    

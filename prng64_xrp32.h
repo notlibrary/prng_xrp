@@ -33,6 +33,11 @@ typedef struct
 	uint64_t z;
 	uint64_t counter;	
 }xrp_state_t;
+typedef struct  
+{
+	uint64_t s;
+}splitmix64_state_t;
+
 #ifdef __cplusplus
 }
 #endif //__cpluplus
