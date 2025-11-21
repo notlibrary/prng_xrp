@@ -49,7 +49,7 @@ return out;
 }
 
 static uint64_t
-pearson32(uint64_t in[TOTAL_PARAMS],xrp_state_t* xrp)
+pearson32(uint64_t* in,xrp_state_t* xrp)
 {
 	size_t i;  
 	uint64_t h=0;
