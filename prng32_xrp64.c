@@ -97,7 +97,7 @@ prng32_xrp64(void)
 	
 	shuffle4bytes(xrp->x, xrp->y,xrp);
     
-	uint32_t out[4];
+	uint32_t out[TOTAL_PARAMS];
 	out[0]=xrp->w;
 	out[1]=xrp->x;
 	out[2]=xrp->y;
