@@ -106,7 +106,7 @@ prng64_xrp32(void)
 	
 	uint64_t out[TOTAL_PARAMS];
 	out[0]=result;
-	out[1]=t;
+	out[1]=xrp->x
 	out[2]=xrp->y;
 	out[3]=xrp->z;
 	
