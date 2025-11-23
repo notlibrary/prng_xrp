@@ -37,6 +37,10 @@ typedef struct
 	uint64_t s;
 }splitmix64_state_t;
 
+#if !defined (PAIR_TOY_TEST) && !defined (PAIR_CRYPTO_HASH) && !defined (PAIR_STREAM_CIPHER)
+#define PAIR_NULL_RAW
+#endif
+
 #ifdef __cplusplus
 }
 #endif //__cpluplus

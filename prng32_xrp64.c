@@ -26,7 +26,7 @@ rotr32(uint32_t n, size_t shift)
 
 #define BYTES_IN_WORD 4
 #define TOTAL_PARAMS 4
-
+#ifdef PAIR_TOY_TEST
 static uint32_t
 get_word(uint64_t in, xrp_state_t* xrp)
 {
@@ -76,6 +76,7 @@ for (i = 0; i < BYTES_IN_WORD; i++) {
             
 return;
 }
+#endif
 #define WORDS_IN_TABLE 64
 uint32_t
 prng32_xrp64(void)
@@ -94,16 +95,18 @@ prng32_xrp64(void)
 	xrp->w= t ^ s ^ (s >> 19);
 	
     ++(xrp->counter); (xrp->counter >=XRP_MAX ) ? xrp->counter = 0 : 0;
-	
+#ifdef PAIR_TOY_TEST	
 	shuffle4bytes(xrp->x, xrp->y,xrp);
-    
 	uint32_t out[TOTAL_PARAMS];
 	out[0]=xrp->w;
 	out[1]=xrp->x;
 	out[2]=xrp->y;
 	out[3]=xrp->z;	
-	
 	return pearson64(out,xrp);	
+#endif
+#ifdef PAIR_NULL_RAW
+	return xrp->w;
+#endif
 }
 
 
@@ -119,7 +122,20 @@ splitmix64(splitmix64_state_t *state)
 void
 seed_xrp64(uint64_t seed)
 {
-const unsigned char xrp64_canonical_table[TABLE_SIZE_BYTES] = {
+   xrp_state_t* xrp = get_xrp_state();
+   xrp->counter = 0;
+   
+	splitmix64_state_t smstate = {seed};
+
+	uint64_t tmp = splitmix64(&smstate);
+	xrp->w = (uint32_t)tmp;
+	xrp->x = (uint32_t)(tmp >> 32);
+
+	tmp = splitmix64(&smstate);
+	xrp->y = (uint32_t)tmp;
+	xrp->z = (uint32_t)(tmp >> 32);
+  #ifdef PAIR_TOY_TEST 
+  const unsigned char xrp64_canonical_table[TABLE_SIZE_BYTES] = {
        92,  6, 85,150, 36, 23,112,164,135,207,169,  5, 26, 64,165,219, //  1
 
        61, 20, 68, 89,130, 63, 52,102, 24,229,132,245, 80,216,195,115, //  2
@@ -154,19 +170,6 @@ const unsigned char xrp64_canonical_table[TABLE_SIZE_BYTES] = {
 
          };	
    size_t i = 0;
-   xrp_state_t* xrp = get_xrp_state();
-   xrp->counter = 0;
-   
-	splitmix64_state_t smstate = {seed};
-
-	uint64_t tmp = splitmix64(&smstate);
-	xrp->w = (uint32_t)tmp;
-	xrp->x = (uint32_t)(tmp >> 32);
-
-	tmp = splitmix64(&smstate);
-	xrp->y = (uint32_t)tmp;
-	xrp->z = (uint32_t)(tmp >> 32);
-   
    for (i= 0;i<TABLE_SIZE_BYTES;++i) { XRP64_TABLE_ID[i]=xrp64_canonical_table[i];}
    
    shuffle4bytes(seed,(rotl32(prng32_xrp64(),16)) ,xrp);
@@ -174,6 +177,7 @@ const unsigned char xrp64_canonical_table[TABLE_SIZE_BYTES] = {
    for(i = 0; i < (WORDS_IN_TABLE + seed % WORDS_IN_TABLE); ++i) {
        shuffle4bytes(prng32_xrp64(), prng32_xrp64(),xrp);
    }
+#endif
    return;
 }
 #undef TABLE_SIZE_BYTES

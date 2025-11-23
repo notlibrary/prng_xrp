@@ -30,6 +30,7 @@ rotr64(uint64_t n, size_t shift)
 #define BYTES_IN_WORD 8
 #define TOTAL_PARAMS 4
 
+#ifdef PAIR_TOY_TEST
 static uint64_t 
 get_word(uint64_t in, xrp_state_t* xrp)
 {
@@ -82,6 +83,7 @@ for ( i = 0; i < BYTES_IN_WORD; i++) {
          
     return;
 }
+#endif
 #define WORDS_IN_TABLE 32
 uint64_t
 prng64_xrp32(void)
@@ -102,7 +104,9 @@ prng64_xrp32(void)
 	
     ++(xrp->counter); (xrp->counter >= XRP_MAX) ? xrp->counter = 0 : 0;
 
-	shuffle8bytes(xrp->x, xrp->y,xrp);
+#ifdef PAIR_TOY_TEST
+
+	shuffle8bytes(xrp->z, result,xrp);
 	
 	uint64_t out[TOTAL_PARAMS];
 	out[0]=result;
@@ -111,7 +115,10 @@ prng64_xrp32(void)
 	out[3]=xrp->z;
 	
 	return pearson32(out,xrp);
-
+#endif
+#ifdef PAIR_NULL_RAW
+	return result;
+#endif
 }
 
 static uint64_t
@@ -126,7 +133,18 @@ splitmix64(splitmix64_state_t *state)
 void
 seed_xrp32(uint64_t seed)
 {
-   const unsigned char xrp32_canonical_table[TABLE_SIZE_BYTES] = {
+    xrp_state_t* xrp = get_xrp_state();
+	
+	xrp->counter=0;
+	
+	splitmix64_state_t smstate = {seed};
+
+	xrp->w = splitmix64(&smstate);
+	xrp->x = splitmix64(&smstate);
+	xrp->y = splitmix64(&smstate); 
+	xrp->z = splitmix64(&smstate); 
+#ifdef PAIR_TOY_TES
+      const unsigned char xrp32_canonical_table[TABLE_SIZE_BYTES] = {
        92,  6, 85,150, 36, 23,112,164,135,207,169,  5, 26, 64,165,219, //  1
 
        61, 20, 68, 89,130, 63, 52,102, 24,229,132,245, 80,216,195,115, //  2
@@ -159,26 +177,15 @@ seed_xrp32(uint64_t seed)
 
        43,119,224, 71,122,142, 42,160,104, 48,247,103, 15, 11,138,239  // 16
 
-         };
-    size_t i = 0;
-    xrp_state_t* xrp = get_xrp_state();
-	
-	xrp->counter=0;
-	
-	splitmix64_state_t smstate = {seed};
-
-	xrp->w = splitmix64(&smstate);
-	xrp->x = splitmix64(&smstate);
-	xrp->y = splitmix64(&smstate); 
-	xrp->z = splitmix64(&smstate); 
-	
-   
+      };
+	  size_t i = 0;
    for (i= 0;i<TABLE_SIZE_BYTES;++i) { XRP32_TABLE_ID[i]=xrp32_canonical_table[i];}
    shuffle8bytes(seed,rotr64(prng64_xrp32(),32),xrp);
    shuffle8bytes(seed,rotl64(prng64_xrp32(),32),xrp);
    for(i = 0; i < (WORDS_IN_TABLE + seed % WORDS_IN_TABLE); ++i) {
 		shuffle8bytes(prng64_xrp32(), prng64_xrp32(),xrp);
    }
+#endif
    return;
 }
 #undef TABLE_SIZE_BYTES
