@@ -47,7 +47,7 @@ in order to slowly obtain slightly more high quality pseudo random numbers
 It's totally free 0-BSD code. You can include it in your app or library
 
 
-Do not underestimate it with best possible test circumstances `clang -O2 PAIR_NULL_RAW` it outputs ~2400 MB/sec
+Do not underestimate it with best possible test circumstances `clang -O2 -DPAIR_NULL_RAW` it outputs ~2400 MB/sec
 of pseudo random numbers from stock desktop computer device
 
 Sure I'm aware about MT and WELL tech and math superiority. The point is not to maintain it but
