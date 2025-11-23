@@ -18,7 +18,7 @@ Explicitly define pairing mode in the beginning of the chosen header (pick one f
 
 - `#define PAIR_NULL_RAW`for crude non-crypto pseudo random 2 times faster then `rand()` default behavior
 
-- `#define PAIR_TOY_TEST` non-crypto hashed pseudo random, slow low, quality, large mem footprint testing only
+- `#define PAIR_TOY_TEST` non-crypto hashed pseudo random, slow, low quality, large mem footprint testing only
 
 - `#define PAIR_CRYPTO_HASH` crypto hashed pseudo random, high quality, normal speed
 

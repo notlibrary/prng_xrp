@@ -26,7 +26,9 @@ void seed_xrp32(uint64_t seed);
 #define WORDS_IN_TABLE 32
 typedef struct 
 {
+#ifdef PAIR_TOY_TEST	
 	unsigned char table[TABLE_SIZE_BYTES];
+#endif
 	uint64_t w;
 	uint64_t x;
 	uint64_t y;

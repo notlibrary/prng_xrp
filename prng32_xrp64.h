@@ -23,9 +23,12 @@ void seed_xrp64(uint64_t seed);
 #define XRP_MAX UINT_MAX
 #define BYTES_IN_WORD 4
 #define WORDS_IN_TABLE 64
+
 typedef struct 
 {
+#ifdef PAIR_TOY_TEST
 	unsigned char table[TABLE_SIZE_BYTES];
+#endif
 	uint32_t w;
 	uint32_t x;	
 	uint32_t y;
