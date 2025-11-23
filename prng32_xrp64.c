@@ -226,7 +226,7 @@ prng32_xrp64(void)
 
 #ifdef PAIR_STREAM_CIPHER
 	chacha20_xor(&xrp->ctx, (uint8_t*) (&xrp->w), 4);
-	return result;
+	return xrp->w;
 #endif
 }
 
