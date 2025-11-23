@@ -6,7 +6,123 @@ The XRP PRNG Xor Rotate Pearson Pseudo Random Number Generator
 #include "prng32_xrp64.h"
 
 #define SHIFTED_WORD_WIDTH 32
+#ifdef PAIR_STREAM_CIPHER
+static uint32_t 
+pack4(const uint8_t *a)
+{
+	uint32_t res = 0;
+	res |= (uint32_t)a[0] << 0 * 8;
+	res |= (uint32_t)a[1] << 1 * 8;
+	res |= (uint32_t)a[2] << 2 * 8;
+	res |= (uint32_t)a[3] << 3 * 8;
+	return res;
+}
 
+static void
+chacha20_init_block(chacha20_context_t *ctx, uint8_t key[], uint8_t nonce[])
+{
+	size_t i=0;
+	
+	for (i=0;i<sizeof (ctx->key);i++){
+		ctx->key[i] = key[i];
+	}
+	for (i=0;i<sizeof(ctx->nonce);i++) {
+		ctx->nonce[i] = nonce[i];
+	}
+
+	const uint8_t *magic_constant = (uint8_t*)"expand 32-byte k";
+	ctx->state[0] = pack4(magic_constant + 0 * 4);
+	ctx->state[1] = pack4(magic_constant + 1 * 4);
+	ctx->state[2] = pack4(magic_constant + 2 * 4);
+	ctx->state[3] = pack4(magic_constant + 3 * 4);
+	ctx->state[4] = pack4(key + 0 * 4);
+	ctx->state[5] = pack4(key + 1 * 4);
+	ctx->state[6] = pack4(key + 2 * 4);
+	ctx->state[7] = pack4(key + 3 * 4);
+	ctx->state[8] = pack4(key + 4 * 4);
+	ctx->state[9] = pack4(key + 5 * 4);
+	ctx->state[10] = pack4(key + 6 * 4);
+	ctx->state[11] = pack4(key + 7 * 4);
+	ctx->state[12] = 0;
+	ctx->state[13] = pack4(nonce + 0 * 4);
+	ctx->state[14] = pack4(nonce + 1 * 4);
+	ctx->state[15] = pack4(nonce + 2 * 4);
+	for (i=0;i<sizeof(ctx->nonce);i++) {
+		ctx->nonce[i] = nonce[i];
+	}
+}
+
+static void
+chacha20_block_set_counter(chacha20_context_t *ctx, uint64_t counter)
+{
+	ctx->state[12] = (uint32_t)counter;
+	ctx->state[13] = pack4(ctx->nonce + 0 * 4) + (uint32_t)(counter >> 32);
+}
+
+static void 
+chacha20_block_next(chacha20_context_t *ctx) {
+	for (int i = 0; i < 16; i++) ctx->keystream32[i] = ctx->state[i];
+
+#define CHACHA20_QUARTERROUND(x, a, b, c, d) \
+    x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a], 16); \
+    x[c] += x[d]; x[b] = rotl32(x[b] ^ x[c], 12); \
+    x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a], 8); \
+    x[c] += x[d]; x[b] = rotl32(x[b] ^ x[c], 7);
+
+	for (int i = 0; i < 10; i++) 
+	{
+		CHACHA20_QUARTERROUND(ctx->keystream32, 0, 4, 8, 12)
+		CHACHA20_QUARTERROUND(ctx->keystream32, 1, 5, 9, 13)
+		CHACHA20_QUARTERROUND(ctx->keystream32, 2, 6, 10, 14)
+		CHACHA20_QUARTERROUND(ctx->keystream32, 3, 7, 11, 15)
+		CHACHA20_QUARTERROUND(ctx->keystream32, 0, 5, 10, 15)
+		CHACHA20_QUARTERROUND(ctx->keystream32, 1, 6, 11, 12)
+		CHACHA20_QUARTERROUND(ctx->keystream32, 2, 7, 8, 13)
+		CHACHA20_QUARTERROUND(ctx->keystream32, 3, 4, 9, 14)
+	}
+
+	for (int i = 0; i < 16; i++) ctx->keystream32[i] += ctx->state[i];
+
+	uint32_t *counter = ctx->state + 12;
+	counter[0]++;
+	if (0 == counter[0]) 
+	{
+		counter[1]++;
+	}
+}
+
+static void
+chacha20_init_context(chacha20_context_t *ctx, uint8_t key[], uint8_t nonce[], uint64_t counter)
+{
+	size_t i=0;
+	uint8_t* ptr = (uint8_t*)(ctx);
+	for (i=0;i<sizeof(chacha20_context_t);i++){
+		ptr[i]=0;
+	}
+
+	chacha20_init_block(ctx, key, nonce);
+	chacha20_block_set_counter(ctx, counter);
+
+	ctx->counter = counter;
+	ctx->position = 64;
+}
+
+static void
+chacha20_xor(chacha20_context_t *ctx, uint8_t *bytes, size_t n_bytes)
+{
+	uint8_t *keystream8 = (uint8_t*)ctx->keystream32;
+	for (size_t i = 0; i < n_bytes; i++) 
+	{
+		if (ctx->position >= 64) 
+		{
+			chacha20_block_next(ctx);
+			ctx->position = 0;
+		}
+		bytes[i] ^= keystream8[ctx->position];
+		ctx->position++;
+	}
+}
+#endif
 static xrp_state_t* get_xrp_state()
 {
 	static xrp_state_t xrp;
@@ -107,6 +223,11 @@ prng32_xrp64(void)
 #ifdef PAIR_NULL_RAW
 	return xrp->w;
 #endif
+
+#ifdef PAIR_STREAM_CIPHER
+	chacha20_xor(&xrp->ctx, (uint8_t*) (&xrp->w), 4);
+	return result;
+#endif
 }
 
 
@@ -177,6 +298,30 @@ seed_xrp64(uint64_t seed)
    for(i = 0; i < (WORDS_IN_TABLE + seed % WORDS_IN_TABLE); ++i) {
        shuffle4bytes(prng32_xrp64(), prng32_xrp64(),xrp);
    }
+#endif
+#ifdef PAIR_STREAM_CIPHER
+unsigned char* bytesseed = (unsigned char*)(&seed);
+uint64_t noncei = splitmix64(&smstate); 
+unsigned char* bytesnonce = (unsigned char*)(&noncei);
+uint8_t key[32];
+uint8_t nonce[12];
+
+size_t i=0;
+for (i=0;i<8;++i){
+	nonce[i]=bytesnonce[i];
+}
+for (i=8;i<12;++i){
+	nonce[i]=bytesnonce[12-i];
+}
+
+for (i=0;i<16;++i){
+	key[i]=bytesseed[i];
+}
+for (i=16;i<32;++i){
+	key[i]=bytesseed[32-i];
+}
+chacha20_init_context(&xrp->ctx,key, nonce,0);
+
 #endif
    return;
 }

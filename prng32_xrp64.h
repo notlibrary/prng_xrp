@@ -24,6 +24,19 @@ void seed_xrp64(uint64_t seed);
 #define BYTES_IN_WORD 4
 #define WORDS_IN_TABLE 64
 
+#ifdef PAIR_STREAM_CIPHER
+typedef struct 
+{
+	uint32_t keystream32[16];
+	size_t position;
+
+	uint8_t key[32];
+	uint8_t nonce[12];
+	uint64_t counter;
+
+	uint32_t state[16];
+}chacha20_context_t;
+#endif
 typedef struct 
 {
 #ifdef PAIR_TOY_TEST
@@ -33,7 +46,10 @@ typedef struct
 	uint32_t x;	
 	uint32_t y;
 	uint32_t z;
-	uint32_t counter;	
+	uint32_t counter;
+#ifdef PAIR_STREAM_CIPHER
+	chacha20_context_t ctx;
+#endif
 }xrp_state_t;
 typedef struct  
 {
