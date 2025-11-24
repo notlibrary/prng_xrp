@@ -7,6 +7,11 @@ The XRP PRNG Xor Rotate Pair Pseudo Random Number Generator
 
 #define SHIFTED_WORD_WIDTH 32
 #ifdef PAIR_STREAM_CIPHER
+static uint32_t
+rotl32(uint32_t n, size_t shift)
+{
+    return (n << shift) | (n >> (SHIFTED_WORD_WIDTH - shift));
+}
 static uint32_t 
 pack4(const uint8_t *a)
 {
@@ -128,11 +133,6 @@ static xrp_state_t* get_xrp_state()
 	static xrp_state_t xrp;
 	return &xrp; 
 
-}
-static uint32_t
-rotl32(uint32_t n, size_t shift)
-{
-    return (n << shift) | (n >> (SHIFTED_WORD_WIDTH - shift));
 }
 static uint32_t
 rotr32(uint32_t n, size_t shift)
