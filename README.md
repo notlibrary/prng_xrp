@@ -16,7 +16,7 @@ for 64 bit output unsigned numbers; xoshiro256ss algo;
 
 Explicitly define pairing mode in the beginning of the chosen header (pick one from list below):
 
-- `#define PAIR_NULL_RAW`for crude non-crypto pseudo random 2 times faster then `rand()` default behavior
+- `#define PAIR_NULL_RAW`for crude non-crypto pseudo random 2 times faster than `rand()` (default behavior)
 
 - `#define PAIR_TOY_TEST` non-crypto hashed pseudo random, slow, low quality, large mem footprint testing only
 
