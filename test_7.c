@@ -1,5 +1,5 @@
 /* 
-The XRP PRNG Xor Rotate Pearson Pseudo Random Number Generator
+The XRP PRNG Xor Rotate Pair Pseudo Random Number Generator
  * 0-CLAUSE BSD LICENSE.
  */
 

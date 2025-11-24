@@ -1,5 +1,5 @@
 /* 
-The XRP PRNG Xor Rotate Pearson Pseudo Random Number Generator
+The XRP PRNG Xor Rotate Pair Pseudo Random Number Generator
  * 0-CLAUSE BSD LICENSE.
  */
 
@@ -17,7 +17,6 @@ extern "C" {
 uint64_t prng64_xrp32(void);
 void seed_xrp32(uint64_t seed);
 #define XRP32_TABLE_ID xrp->table
-#define PAIR_STREAM_CIPHER
 #define TABLE_SIZE_BYTES 256
 /* The table must be seeded with DISTINCT 0-255 chars in random order. */
 #define SHIFTED_WORD_WIDTH 64
