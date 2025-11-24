@@ -55,3 +55,6 @@ explain to 5yo what it does and how it works. From this POV generators like `ret
 are actually good one and "shifters" are far ahead than "twisters".
 A broken clock is right twice a day.
 Also deprecating an old generator in favor of new yields nothing.
+
+P.S. “Anyone who considers arithmetical methods of producing random numbers is, of course, in a state of
+sin.” - John von Neumann
