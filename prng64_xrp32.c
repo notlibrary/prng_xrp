@@ -15,14 +15,14 @@ rotl32(uint32_t x, int n)
 	return (x << n) | (x >> (32 - n));
 }
 static uint32_t 
-pack4(const uint8_t *a)
+load32(const void *a)
 {
-	uint32_t res = 0;
-	res |= (uint32_t)a[0] << 0 * 8;
-	res |= (uint32_t)a[1] << 1 * 8;
-	res |= (uint32_t)a[2] << 2 * 8;
-	res |= (uint32_t)a[3] << 3 * 8;
-	return res;
+    const uint8_t* p  = (const uint8_t *)a;
+	return
+	(uint32_t)p[0] << 0  |
+	(uint32_t)p[1] << 8  |
+	(uint32_t)p[2] << 16 |
+	(uint32_t)p[3] << 24 ;
 }
 
 static void
@@ -38,22 +38,22 @@ chacha20_init_block(chacha20_context_t *ctx, uint8_t key[], uint8_t nonce[])
 	}
 
 	const uint8_t *magic_constant = (uint8_t*)"expand 32-byte k";
-	ctx->state[0] = pack4(magic_constant + 0 * 4);
-	ctx->state[1] = pack4(magic_constant + 1 * 4);
-	ctx->state[2] = pack4(magic_constant + 2 * 4);
-	ctx->state[3] = pack4(magic_constant + 3 * 4);
-	ctx->state[4] = pack4(key + 0 * 4);
-	ctx->state[5] = pack4(key + 1 * 4);
-	ctx->state[6] = pack4(key + 2 * 4);
-	ctx->state[7] = pack4(key + 3 * 4);
-	ctx->state[8] = pack4(key + 4 * 4);
-	ctx->state[9] = pack4(key + 5 * 4);
-	ctx->state[10] = pack4(key + 6 * 4);
-	ctx->state[11] = pack4(key + 7 * 4);
+	ctx->state[0] = load32(magic_constant + 0 * 4);
+	ctx->state[1] = load32(magic_constant + 1 * 4);
+	ctx->state[2] = load32(magic_constant + 2 * 4);
+	ctx->state[3] = load32(magic_constant + 3 * 4);
+	ctx->state[4] = load32(key + 0 * 4);
+	ctx->state[5] = load32(key + 1 * 4);
+	ctx->state[6] = load32(key + 2 * 4);
+	ctx->state[7] = load32(key + 3 * 4);
+	ctx->state[8] = load32(key + 4 * 4);
+	ctx->state[9] = load32(key + 5 * 4);
+	ctx->state[10] = load32(key + 6 * 4);
+	ctx->state[11] = load32(key + 7 * 4);
 	ctx->state[12] = 0;
-	ctx->state[13] = pack4(nonce + 0 * 4);
-	ctx->state[14] = pack4(nonce + 1 * 4);
-	ctx->state[15] = pack4(nonce + 2 * 4);
+	ctx->state[13] = load32(nonce + 0 * 4);
+	ctx->state[14] = load32(nonce + 1 * 4);
+	ctx->state[15] = load32(nonce + 2 * 4);
 	for (i=0;i<sizeof(ctx->nonce);i++) {
 		ctx->nonce[i] = nonce[i];
 	}
@@ -63,7 +63,7 @@ static void
 chacha20_block_set_counter(chacha20_context_t *ctx, uint64_t counter)
 {
 	ctx->state[12] = (uint32_t)counter;
-	ctx->state[13] = pack4(ctx->nonce + 0 * 4) + (uint32_t)(counter >> 32);
+	ctx->state[13] = load32(ctx->nonce + 0 * 4) + (uint32_t)(counter >> 32);
 }
 
 static void 
