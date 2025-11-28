@@ -22,7 +22,19 @@ load32(const void *a)
 	(uint32_t)p[2] << 16 |
 	(uint32_t)p[3] << 24 ;
 }
-
+static void 
+store64( void *dst, uint64_t w )
+{
+  uint8_t *p = ( uint8_t * )dst;
+  p[0] = (uint8_t)(w >>  0);
+  p[1] = (uint8_t)(w >>  8);
+  p[2] = (uint8_t)(w >> 16);
+  p[3] = (uint8_t)(w >> 24);
+  p[4] = (uint8_t)(w >> 32);
+  p[5] = (uint8_t)(w >> 40);
+  p[6] = (uint8_t)(w >> 48);
+  p[7] = (uint8_t)(w >> 56);
+}
 static void
 chacha20_init_block(chacha20_context_t *ctx, uint8_t key[], uint8_t nonce[])
 {
@@ -300,33 +312,18 @@ seed_xrp64(uint64_t seed)
    }
 #endif
 #ifdef PAIR_STREAM_CIPHER
-unsigned char* bytesseed = (unsigned char*)(&seed);
 uint64_t noncei = splitmix64(&smstate); 
-unsigned char* bytesnonce = (unsigned char*)(&noncei);
 uint8_t key[32];
 uint8_t nonce[12];
 
-size_t i=0;
-for (i=0;i<8;++i){
-	nonce[i]=bytesnonce[i];
-}
-for (i=8;i<12;++i){
-	nonce[i]=bytesnonce[12-i];
-}
+store64(nonce, noncei);
+store64(&nonce[4], noncei);
 
-for (i=0;i<8;++i){
-	key[i]=bytesseed[i];
-}
-for (i=8;i<16;++i){
-	key[i]=bytesseed[16-i];
-}
-for (i=16;i<24;++i){
-	key[i]=bytesseed[24-i];
-}
+store64(key,splitmix64(&smstate));
+store64(&key[8],splitmix64(&smstate));
+store64(&key[16],splitmix64(&smstate));
+store64(&key[24],splitmix64(&smstate));
 
-for (i=24;i<32;++i){
-	key[i]=bytesseed[32-i];
-}
 chacha20_init_context(&xrp->ctx,key, nonce,0);
 
 #endif
