@@ -330,10 +330,17 @@ for (i=8;i<12;++i){
 	nonce[i]=bytesnonce[12-i];
 }
 
-for (i=0;i<16;++i){
+for (i=0;i<8;++i){
 	key[i]=bytesseed[i];
 }
-for (i=16;i<32;++i){
+for (i=8;i<16;++i){
+	key[i]=bytesseed[16-i];
+}
+for (i=16;i<24;++i){
+	key[i]=bytesseed[24-i];
+}
+
+for (i=24;i<32;++i){
 	key[i]=bytesseed[32-i];
 }
 chacha20_init_context(&xrp->ctx,key, nonce,0);
