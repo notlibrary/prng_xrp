@@ -350,7 +350,8 @@ store32(&key[24],prng32_xrp64());
 store32(&key[28],prng32_xrp64());
 
 chacha20_init_context(&xrp->ctx,key, nonce,0);
-
+size_t i = 0; for (i=0;i<32;i++) {key[i]=0;}
+for (i=0;i<12;i++) {nonce[i]=0;}
 #endif
    return;
 }
