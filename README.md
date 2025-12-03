@@ -36,6 +36,9 @@ To get number max value use: `XRP_MAX` macro
 
 Not thread-safe
 
+Again there is no such thing as partially crypto secure PRNG
+so you should pay attention to small details every time to keep it crtpto secure
+
 I wrote it long ago as STEM student now I publish whole algorithm
 (because I think it can interest you) and quit. Not going to maintain it anymore. 
 However you are welcome to test this perfectly fine number crusher at anytime. 

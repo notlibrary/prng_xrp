@@ -35,6 +35,15 @@ store64( void *dst, uint64_t w )
   p[6] = (uint8_t)(w >> 48);
   p[7] = (uint8_t)(w >> 56);
 }
+static void 
+store32( void *dst, uint32_t w )
+{
+  uint8_t *p = ( uint8_t * )dst;
+  p[0] = (uint8_t)(w >>  0);
+  p[1] = (uint8_t)(w >>  8);
+  p[2] = (uint8_t)(w >> 16);
+  p[3] = (uint8_t)(w >> 24);
+}
 static void
 chacha20_init_block(chacha20_context_t *ctx, uint8_t key[], uint8_t nonce[])
 {
@@ -323,6 +332,22 @@ store64(key,splitmix64(&smstate));
 store64(&key[8],splitmix64(&smstate));
 store64(&key[16],splitmix64(&smstate));
 store64(&key[24],splitmix64(&smstate));
+
+chacha20_init_context(&xrp->ctx,key, nonce,0);
+
+noncei = prng32_xrp64();
+store32(nonce, noncei);
+store32(&nonce[4], prng32_xrp64());
+store32(&nonce[8], prng32_xrp64());
+
+store32(key,prng32_xrp64());
+store32(&key[4],prng32_xrp64());
+store32(&key[8],prng32_xrp64());
+store32(&key[12],prng32_xrp64());
+store32(&key[16],prng32_xrp64());
+store32(&key[20],prng32_xrp64());
+store32(&key[24],prng32_xrp64());
+store32(&key[28],prng32_xrp64());
 
 chacha20_init_context(&xrp->ctx,key, nonce,0);
 

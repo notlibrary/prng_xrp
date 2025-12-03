@@ -341,6 +341,16 @@ store64(&key[16],splitmix64(&smstate));
 store64(&key[24],splitmix64(&smstate));
 chacha20_init_context(&xrp->ctx,key, nonce,0);
 
+noncei = prng64_xrp32();
+store64(nonce, noncei);
+store64(&nonce[4], noncei);
+
+store64(key,prng64_xrp32());
+store64(&key[8],prng64_xrp32());
+store64(&key[16],prng64_xrp32());
+store64(&key[24],prng64_xrp32());
+
+chacha20_init_context(&xrp->ctx,key, nonce,0);
 #endif
    return;
 }
