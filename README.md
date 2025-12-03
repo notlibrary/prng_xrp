@@ -25,6 +25,9 @@ Explicitly define pairing mode in the beginning of the chosen header (pick one f
 - `#define PAIR_STREAM_CIPHER` stream cipher crypto pseudo random, high quality, normal speed
 
 
+The point of pairing(or whitening) is to drop some speed for crypto security reasons because 
+fast crypto secure statistically correct PRNG is non-existent thing
+
 To seed use: `seed_xrp64(seed)` or `seed_xrp32(seed)` call
 
 To get next pseudo random number use: `prng32_xrp64()` or `prng64_xrp32()` call
