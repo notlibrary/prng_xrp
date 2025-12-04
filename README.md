@@ -26,7 +26,7 @@ Explicitly define pairing mode in the beginning of the chosen header (pick one f
 
 
 The point of pairing(or whitening) is to drop some speed for crypto security reasons because 
-fast crypto secure statistically correct PRNG is non-existent thing
+fast crypto secure statistically correct PRNG is non-existent thing(ISAAC)
 
 To seed use: `seed_xrp64(seed)` or `seed_xrp32(seed)` call
 
