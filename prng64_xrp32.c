@@ -328,44 +328,44 @@ seed_xrp32(uint64_t seed)
    }
 #endif
 #ifdef PAIR_STREAM_CIPHER
-uint64_t noncei = splitmix64(&smstate); 
-uint8_t key[32];
-uint8_t nonce[12];
+	uint64_t noncei = splitmix64(&smstate); 
+	uint8_t key[32];
+	uint8_t nonce[12];
 
-store64(nonce, noncei);
-store64(&nonce[4], noncei);
+	store64(nonce, noncei);
+	store64(&nonce[4], noncei);
 
-store64(key,splitmix64(&smstate));
-store64(&key[8],splitmix64(&smstate));
-store64(&key[16],splitmix64(&smstate));
-store64(&key[24],splitmix64(&smstate));
-chacha20_init_context(&xrp->ctx,key, nonce,0);
+	store64(key,splitmix64(&smstate));
+	store64(&key[8],splitmix64(&smstate));
+	store64(&key[16],splitmix64(&smstate));
+	store64(&key[24],splitmix64(&smstate));
+	chacha20_init_context(&xrp->ctx,key, nonce,0);
 
-uint64_t s[4];
-size_t i=0;
-for (i=0;i<4;i++){s[i]=prng64_xrp32();}
-xrp->w=s[0];
-xrp->x=s[1];
-xrp->y=s[2];
-xrp->z=s[3];
-for (i=0;i<4;i++){s[i]=prng64_xrp32();}
-smstate.s=0;
-seed=0;
+	uint64_t s[4];
+	size_t i=0;
+	for (i=0;i<4;i++){s[i]=prng64_xrp32();}
+	xrp->w=s[0];
+	xrp->x=s[1];
+	xrp->y=s[2];
+	xrp->z=s[3];
+	for (i=0;i<4;i++){s[i]=prng64_xrp32();}
+	smstate.s=0;
+	seed=0;
 
-noncei = prng64_xrp32();
-store64(nonce, noncei);
-store64(&nonce[4], noncei);
+	noncei = prng64_xrp32();
+	store64(nonce, noncei);
+	store64(&nonce[4], noncei);
 
-store64(key,prng64_xrp32());
-store64(&key[8],prng64_xrp32());
-store64(&key[16],prng64_xrp32());
-store64(&key[24],prng64_xrp32());
+	store64(key,prng64_xrp32());
+	store64(&key[8],prng64_xrp32());
+	store64(&key[16],prng64_xrp32());
+	store64(&key[24],prng64_xrp32());
 
-chacha20_init_context(&xrp->ctx,key, nonce,0);
-i = 0; for (i=0;i<32;i++) {key[i]=0;}
-for (i=0;i<12;i++) {nonce[i]=0;}
+	chacha20_init_context(&xrp->ctx,key, nonce,0);
+	i = 0; for (i=0;i<32;i++) {key[i]=0;}
+	for (i=0;i<12;i++) {nonce[i]=0;}
 #endif
-   return;
+	return;
 }
 #undef TABLE_SIZE_BYTES
 #undef SHIFTED_WORD_WIDTH
