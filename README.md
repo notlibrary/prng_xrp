@@ -42,7 +42,9 @@ so you should pay attention to small details and question everything every time 
 Unfortunately whitening alone is not enough to magically make everything totally secure 
 you should also secure initialization routine which use predictable PRNG
 by initializing stream cipher(cryptohash) keys from system entropy source(or just XOR generator output against it again) 
-which is platform dependable operation we can't do reliably here. Sorry.
+which is platform dependable operation we can't do reliably here. 
+After this final manual adjustment it's usable as a keystream. Sorry about that.
+
 
 I wrote it long ago as STEM student now I publish whole algorithm
 (because I think it can interest you) and quit. Not going to maintain it anymore. 
