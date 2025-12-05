@@ -20,9 +20,9 @@ Explicitly define pairing mode in the beginning of the chosen header (pick one f
 
 - `#define PAIR_TOY_TEST` non-crypto hashed pseudo random, slow, low quality, large mem footprint testing only
 
-- `#define PAIR_CRYPTO_HASH` crypto hashed pseudo random, high quality, normal speed
+- `#define PAIR_CRYPTO_HASH` quasi-crypto hashed pseudo random, high quality, normal speed
 
-- `#define PAIR_STREAM_CIPHER` stream cipher crypto pseudo random, high quality, normal speed
+- `#define PAIR_STREAM_CIPHER` stream cipher quasi-crypto pseudo random, high quality, normal speed
 
 
 The point of pairing(or whitening) is to drop some speed for crypto security reasons because 
@@ -38,6 +38,11 @@ Not thread-safe
 
 Again there is no such thing as partially crypto secure PRNG
 so you should pay attention to small details and question everything every time to keep it crypto secure
+
+Unfortunately whitening alone is not enough to magically make everything totally secure 
+you should also secure initialization routine which use predictable PRNG
+by initializing stream cipher(cryptohash) keys from system entropy source(or XOR against it again) 
+which is platform dependable operation we can't do reliably here. Sorry.
 
 I wrote it long ago as STEM student now I publish whole algorithm
 (because I think it can interest you) and quit. Not going to maintain it anymore. 
