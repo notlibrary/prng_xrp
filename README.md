@@ -45,8 +45,8 @@ by initializing stream cipher(cryptohash) keys from system entropy source(or jus
 which is platform dependable operation we can't do reliably here. 
 After this final manual adjustment it's usable as a keystream. Sorry about that.
 
-Good news that our initial intuitive guess about using xoshiro256ss as counter
-for ChaCha20 encryption was right so we successfully secured around 300 MB/sec algorithmic keystream
+Good news that our initial intuitive guess about using `xoshiro256ss` as counter
+for `ChaCha20` encryption was right so we successfully secured around 300 MB/sec algorithmic keystream
 perhaps one of the fastest on the planet(sic! checking it actual statistical quality we leave for experts)
 
 I wrote it long ago as STEM student now I publish whole algorithm
